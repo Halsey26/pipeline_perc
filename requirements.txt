@@ -8,4 +8,5 @@ seaborn
 scikit-learn 
 requests 
 openpyxl
-dotenv 
+tqdm 
+prefect # pip install -U prefect
