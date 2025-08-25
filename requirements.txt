@@ -1,12 +1,12 @@
-pandas 
+pandas #instalar
 requests 
 pyarrow
-pandas 
 numpy 
-matplotlib 
+matplotlib #verificar
 seaborn 
 scikit-learn 
 requests 
 openpyxl
 tqdm 
 prefect # pip install -U prefect
+python-dotenv
