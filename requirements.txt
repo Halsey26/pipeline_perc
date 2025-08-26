@@ -1,7 +1,7 @@
 pandas #instalar
 requests 
-pyarrow
-numpy 
+pyarrow==15.0.2
+numpy ==1.26.4
 matplotlib #verificar
 seaborn 
 scikit-learn 
@@ -10,3 +10,5 @@ openpyxl
 tqdm 
 prefect # pip install -U prefect
 python-dotenv
+fastparquet
+supabase
