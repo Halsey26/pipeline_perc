@@ -12,3 +12,6 @@ prefect # pip install -U prefect
 python-dotenv
 fastparquet
 supabase
+sqlalchemy 
+psycopg2
+
