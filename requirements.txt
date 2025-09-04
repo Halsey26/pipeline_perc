@@ -14,4 +14,6 @@ fastparquet
 supabase
 sqlalchemy 
 psycopg2
-
+# unidecode
+rapidfuzz
+# unicodedata2
