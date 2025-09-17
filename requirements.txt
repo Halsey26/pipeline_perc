@@ -16,4 +16,6 @@ sqlalchemy
 psycopg2
 # unidecode
 rapidfuzz
+streamlit
+plotly
 # unicodedata2

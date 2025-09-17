@@ -8,6 +8,8 @@ from sqlalchemy import create_engine, inspect
 import json
 import numpy as np
 from pathlib import Path
+from supabase import create_client, Client
+
 
 load_dotenv()
 
@@ -95,19 +97,6 @@ def preprocessing_supabase(data_extracted):
         print('Nada que serializar')
 
 
-# def insert2supabase(engine,esquema, endpoint, df):
-#     try: 
-#         table_name= f'{endpoint}_raw'
-#         df.to_sql(
-#             table_name,
-#             con=engine,
-#             schema=esquema, # el esquema debe estar creado previamente
-#             if_exists='append', #append para no soreescrbbir, ()
-#             index=False
-#         )
-#         print(f'💾 Creación exitosa de la tabla {table_name} en el esquema {esquema}.\n')
-#     except Exception as e:
-#         print(f"Error para crear la tabla {table_name}: {e}")
 
 def insert2supabase(engine, esquema, endpoint, df):
     table_name = f"{endpoint}_raw"
@@ -160,25 +149,39 @@ def insert2supabase(engine, esquema, endpoint, df):
     # Funciones para extraer la data_raw
 
     # extrae todos los endpoints, ya no es necesario realizar el for fuera de la funcion
-
-# Traer la información por lotes
-# consideración hasta 5000 mil registros
+#------------------------------------------------
+def extract_supabase(supabase,endpoint, esquema):
+    """
+    Extrae datos crudos desde una tabla en Supabase asociada a un endpoint específico.
     
-def extract_supabase_raw(endpoint): # cambiar despues a endpoints(lista)
-    name_table= f"{endpoint}_raw"
+    Características principales:
+    - Los datos se obtienen en lotes de 1000 filas (paginación con .range).
+    - Por defecto soporta hasta 5000 registros, pero se puede ampliar el rango.
+    - Para el endpoint "products", se especifican las columnas exactas a consultar
+      (evita traer campos innecesarios o complejos como JSON anidados).
+    - Para otros endpoints, se extraen todas las columnas disponibles con '*'.
+    - El proceso se detiene automáticamente cuando no existen más filas en el rango.
+    - Une todos los lotes extraídos en un único DataFrame de Pandas.
+    
+    Input: endpoint(str)
+    Nombre del endpoint a consultar (ejemplo: "products", "orders", "customers").
+    
+    Output: Un DataFrame con todos los registros obtenidos de la tabla `{endpoint}_raw`.
+    """
+    name_table= f"{endpoint}_{esquema}"
     rango= [0,1000,2000,3000,4000]
     # evaluar o almacenar mientras exista rango en la tabla si lanza el error entonces parar
 
     parts_table=[]
 
-    if endpoint=='products': # columnas obtenidas luego de query en SQL EDITOR
-        products_column=' "product.id" , "product.name" , "product.page_title" , "product.description" , "product.meta_description" , "product.price" , "product.cost_per_item" , "product.compare_at_price" , "product.weight" , "product.stock" , "product.stock_unlimited" , "product.stock_threshold" , "product.stock_notification" , "product.sku" , "product.brand" , "product.barcode" , "product.featured" , "product.reviews_enabled" , "product.status" , "product.shipping_required" , "product.type" , "product.days_to_expire" , "product.created_at" , "product.updated_at" , "product.package_format" , "product.length" , "product.width" , "product.height" , "product.diameter" , "product.google_product_category" , "product.images" , "product.variants" , "product.fields" , "product.permalink" , "product.discount" , "product.currency" '
-        select_query=products_column
+    if esquema=='raw' and endpoint=='products': # columnas obtenidas luego de query en SQL EDITOR
+        select_query=' "product.id" , "product.name" , "product.page_title" , "product.description" , "product.meta_description" , "product.price" , "product.cost_per_item" , "product.compare_at_price" , "product.weight" , "product.stock" , "product.stock_unlimited" , "product.stock_threshold" , "product.stock_notification" , "product.sku" , "product.brand" , "product.barcode" , "product.featured" , "product.reviews_enabled" , "product.status" , "product.shipping_required" , "product.type" , "product.days_to_expire" , "product.created_at" , "product.updated_at" , "product.package_format" , "product.length" , "product.width" , "product.height" , "product.diameter" , "product.google_product_category" , "product.images" , "product.variants" , "product.fields" , "product.permalink" , "product.discount" , "product.currency" '
+        # select_query=products_column
     else:
         select_query="*"
 
     # Obtener data de Supabase por partes
-    for ind, valor in enumerate(rango):
+    for valor in rango:
         table_chunk = ( 
         supabase.table(name_table)
         .select(select_query)
@@ -190,13 +193,53 @@ def extract_supabase_raw(endpoint): # cambiar despues a endpoints(lista)
         else:
             break
 
-    completed_table =[]
-
     # Juntar todas las listas en una sola lista
-    for i in range(len(parts_table)):
-        completed_table+= parts_table[i]
+    completed_table =[]
+    for chunk in parts_table:
+        completed_table+= chunk
     
     print(f'✅ Extracción correcta realizada para {name_table}')
     print(f"Filas: {len(completed_table)}\n")
 
     return pd.DataFrame(completed_table)
+
+
+# Traer la información por lotes
+# consideración hasta 5000 mil registros
+    
+# def extract_supabase_raw(endpoint): # cambiar despues a endpoints(lista)
+#     name_table= f"{endpoint}_raw"
+#     rango= [0,1000,2000,3000,4000]
+#     # evaluar o almacenar mientras exista rango en la tabla si lanza el error entonces parar
+
+#     parts_table=[]
+
+#     if endpoint=='products': # columnas obtenidas luego de query en SQL EDITOR
+#         products_column=' "product.id" , "product.name" , "product.page_title" , "product.description" , "product.meta_description" , "product.price" , "product.cost_per_item" , "product.compare_at_price" , "product.weight" , "product.stock" , "product.stock_unlimited" , "product.stock_threshold" , "product.stock_notification" , "product.sku" , "product.brand" , "product.barcode" , "product.featured" , "product.reviews_enabled" , "product.status" , "product.shipping_required" , "product.type" , "product.days_to_expire" , "product.created_at" , "product.updated_at" , "product.package_format" , "product.length" , "product.width" , "product.height" , "product.diameter" , "product.google_product_category" , "product.images" , "product.variants" , "product.fields" , "product.permalink" , "product.discount" , "product.currency" '
+#         select_query=products_column
+#     else:
+#         select_query="*"
+
+#     # Obtener data de Supabase por partes
+#     for ind, valor in enumerate(rango):
+#         table_chunk = ( 
+#         supabase.table(name_table)
+#         .select(select_query)
+#         .range(valor,valor+999) # 0,999 , lo mismo= rango[ind]
+#         .execute()
+#             )
+#         if len(table_chunk.data): # si existe la tabla en ese rango
+#             parts_table.append(table_chunk.data)
+#         else:
+#             break
+
+#     completed_table =[]
+
+#     # Juntar todas las listas en una sola lista
+#     for i in range(len(parts_table)):
+#         completed_table+= parts_table[i]
+    
+#     print(f'✅ Extracción correcta realizada para {name_table}')
+#     print(f"Filas: {len(completed_table)}\n")
+
+#     return pd.DataFrame(completed_table)
