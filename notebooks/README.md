@@ -2,6 +2,7 @@
 # ETL Pipeline - Perceivo eCommerce Agent
 
 Este módulo contiene los notebooks realizados para la implementación del **pipeline ETL (Extract, Transform, Load)** para el agente conversacional de eCommerce.  
+
 ---
 
 ## 📂 Estructura del directorio
