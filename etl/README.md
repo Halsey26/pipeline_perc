@@ -10,14 +10,10 @@ El objetivo es automatizar la extracción de datos desde la API de Jumpseller, t
 ```
 etl (actual carpeta)
 │── init.py
-│── pruebas_extract.ipynb 
-│── pruebas_transform.ipynb 
-│── pruebas_load.ipynb 
 │── extract.py 
 │── transform.py 
 │── load.py 
 ```
-
 
 ```
 prefect_flows/
@@ -28,11 +24,6 @@ prefect_flows/
 ---
 
 ## 📝 Descripción de archivos
-
-### **Notebooks de pruebas**
-- **pruebas_extract.ipynb** → Testeo de conexión a la API de Jumpseller, extracción de *products*, *customers* y *orders*. Validación de formatos y almacenamiento inicial.  
-- **pruebas_transform.ipynb** → Limpieza de datos, creación de columnas derivadas (ej. recency, frequency, monetary), prueba de features para modelos como propensión de recompra o churn.  
-- **pruebas_load.ipynb** → Validación de conexión con Supabase, inserción de data procesada en tablas (`customers_clean`, `orders_clean`, etc.).  
 
 ### **Scripts finales**
 - **extract.py** →  (API Jumpseller → data/raw) <br>
