@@ -8,3 +8,6 @@ Configuración
 
 En Cloud, configuramos el work pool:
 - Añadimos la lista de requirements necesarios [requirements_cloud]()
+
+Correrlo manualmente
+prefect deployment run 'main-flow/deploy_KREADORES'

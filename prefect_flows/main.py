@@ -6,6 +6,10 @@ from pipeline_perc.etl.transform import transform_customers, transform_orders, t
 from pipeline_perc.etl.load import insert2supabase
 from tqdm import tqdm
 from supabase import create_client, Client
+from prefect import flow
+# from prefect.filesystems import GitRepository
+# from prefect.runner.storage import GitRepository
+from prefect_github.repository import GitHubRepository
 
 # para ejecutar en terminal de venv: python -m pipeline_perc.prefect_flows.main
 load_dotenv()
@@ -81,8 +85,29 @@ def main_flow():
     load(df)
 
 
+
 if __name__ == "__main__":
-    main_flow()
+    # main_flow()
+
+    source = GitHubRepository.load("prefect-repo")
+
+
+    main_flow.from_source(
+        source=source,
+        entrypoint="prefect_flows/main.py:main_flow"
+    ).deploy(
+        name="deploy_KREADORES",
+        work_pool_name="pool_Kreadores",
+        storage= source
+        # schedule={"interval": 300},  # cada 5 minutos
+    )
+
+
+   # source = GitRepository(
+    #     url="https://github.com/Halsey26/pipeline_perc.git",
+    #     branch="main",
+    # )
+ 
 
 # ejecutar: python -m prefect_flows.main
 

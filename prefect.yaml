@@ -1,0 +1,18 @@
+version: 3.0
+name: pipeline_perc_project
+
+pull:
+  - prefect.deployments.steps.git_clone:
+      repository: https://github.com/Halsey26/pipeline_perc.git
+      branch: main
+  - prefect.deployments.steps.pip_install_requirements:
+      directory: "{{ git_clone.directory }}"
+      requirements_file: requirements.txt
+
+deployments:
+  - name: deploy_KREADORES
+    entrypoint: prefect_flows/main.py:main_flow
+    work_pool:
+      name: pool_Kreadores
+    # schedule:
+    #   interval: 300
