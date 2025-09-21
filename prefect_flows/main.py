@@ -20,7 +20,7 @@ supabase: Client = create_client(url, key)
 endpoints=[ "products","customers","orders"]
 
 @task
-def extract(endpoints):
+def extract(endpoints, login, authtoken):
 
     # Crear carpeta data/raw si no existe
     # Path("data/raw").mkdir(parents=True, exist_ok=True)
@@ -76,7 +76,7 @@ def load(dataframes_clean):
 
 @flow
 def main_flow():
-    extract(endpoints)
+    extract(endpoints, login, authtoken)
     df= transform(endpoints,supabase)
     load(df)
 

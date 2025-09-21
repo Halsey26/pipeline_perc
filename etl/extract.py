@@ -31,7 +31,7 @@ def conect2supabase():
 
     # Create the SQLAlchemy engine
     engine = create_engine(DATABASE_URL)
-    print('✅ Supabase: Conexión Exitosa')
+    print('[OK]  Supabase: Conexión Exitosa')
     return engine
 
 def obtener_datos(endpoint, login, authtoken):
@@ -60,7 +60,7 @@ def obtener_datos(endpoint, login, authtoken):
     barra.close()
 
 
-    print(f"✅ Data obtenida: {endpoint.title()}. Total páginas {page-1}\n")
+    print(f"[OK]  Data obtenida: {endpoint.title()}. Total páginas {page-1}\n")
     datos= pd.json_normalize(datos)
     return datos
 
@@ -194,7 +194,7 @@ def extract_supabase(supabase,endpoint, esquema):
     for chunk in parts_table:
         completed_table+= chunk
     
-    print(f'✅ Extracción correcta realizada para {name_table}')
+    print(f'[OK]  Extracción correcta realizada para {name_table}')
     print(f"Filas: {len(completed_table)}\n")
 
     return pd.DataFrame(completed_table)

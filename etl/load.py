@@ -21,7 +21,7 @@ def insert2supabase(engine, esquema, endpoint, df):
                 if_exists="replace",  # replace crea la tabla si no existe
                 index=False
             )
-            print(f"💾 Tabla {full_table_name} creada con {len(df)} filas.")
+            print(f"[OK] Tabla {full_table_name} creada con {len(df)} filas.")
             return
 
         #☑️ SI la tabla existe, se añade las nuevas filas
@@ -66,9 +66,9 @@ def insert2supabase(engine, esquema, endpoint, df):
                 if_exists="append",
                 index=False
             )
-            print(f"💾 {len(df_new)} nuevas filas insertadas en {full_table_name}.")
+            print(f"[OK] {len(df_new)} nuevas filas insertadas en {full_table_name}.")
         else:
-            print(f"ℹ️ No hay nuevas filas para insertar en {full_table_name}.")
+            print(f"[INFO] No hay nuevas filas para insertar en {full_table_name}.")
 
     except Exception as e:
-        print(f"❌ Error insertando en {full_table_name}: {e}")
+        print(f"[ERROR] Error insertando en {full_table_name}: {e}")
