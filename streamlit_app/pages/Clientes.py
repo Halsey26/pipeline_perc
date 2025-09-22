@@ -92,17 +92,38 @@ def geo_clientes(customer, ciudad_muni):
     )
     fig_ciudad = px.bar(
         clientes_ciudad, x=f"{columna}", y="id_cliente",
-        text_auto=True, labels={"id_cliente": "Nro Clientes", f"{columna}": f"{label}"}
+        text_auto=True, labels={"id_cliente": "Nro Clientes", columna: label}
     )
+    # Ajustes para que se vea bien en Streamlit deploy
+    fig_ciudad.update_layout(
+        autosize=True,
+        margin=dict(l=40, r=20, t=30, b=40),
+        height=400,
+        yaxis=dict(tickfont=dict(size=12)),
+        xaxis=dict(tickfont=dict(size=12))
+    )
+
     st.plotly_chart(fig_ciudad, use_container_width=True)
 
 def marketing_distribucion(customers):
     clientes_marketing = customers['acepta_marketing'].value_counts().reset_index()
     clientes_marketing.columns = ['acepta_marketing', 'conteo']
     fig_marketing = px.pie(
-        clientes_marketing, names='acepta_marketing', values='conteo',
-        
+        clientes_marketing,
+        names='acepta_marketing',
+        values='conteo',
+        hole=0.3,  # opcional, hace un donut
+        color_discrete_sequence=px.colors.sequential.Inferno  # paleta bonita y consistente
     )
+
+    # Ajustes para Streamlit
+    fig_marketing.update_layout(
+        autosize=True,
+        margin=dict(l=20, r=20, t=30, b=20),
+        height=400,  # ajustable según la cantidad de categorías
+        legend=dict(font=dict(size=12))
+    )
+
     st.plotly_chart(fig_marketing, use_container_width=True)
 
 def marketing_conversion(customers, orders):
@@ -134,6 +155,15 @@ def marketing_conversion(customers, orders):
             "comprador": "¿Compró?"
         }
     )
+    # Ajustes para Streamlit
+    fig_conv.update_layout(
+        autosize=True,
+        margin=dict(l=40, r=20, t=30, b=40),
+        height=400,
+        xaxis=dict(tickfont=dict(size=12)),
+        yaxis=dict(tickfont=dict(size=12))
+    )
+
     st.plotly_chart(fig_conv, use_container_width=True)
 
 # ---- Top clientes por gasto y frecuencia ----
@@ -170,8 +200,12 @@ def gasto_frec(orders, customers):
         }
     )
     fig_top.update_layout(
-    xaxis=dict(
-        tickfont=dict(size=14) ) )
+        autosize=True,
+        margin=dict(l=40, r=20, t=30, b=80),  # margen inferior más grande para tickangle
+        height=500,  # ajusta según cantidad de clientes
+        xaxis=dict(tickfont=dict(size=12)),
+        yaxis=dict(tickfont=dict(size=12))
+    )
 
     fig_top.update_xaxes(tickangle=45)
     fig_top.update_traces(textposition='outside')
