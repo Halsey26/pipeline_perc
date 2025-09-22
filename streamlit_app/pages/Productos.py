@@ -119,14 +119,20 @@ def plot_top_vendidos(orders_products, products, orders, top_n=10):
     fig.update_traces(texttemplate='%{text:,}', textposition='outside', hovertemplate="<b>%{y}</b><br>Órdenes: %{x:,}<extra></extra>")
     # Layout responsivo y legible
     fig.update_layout(
-        yaxis={'categoryorder':'total ascending'},  # mayor arriba
+        yaxis=dict(
+            categoryorder='total ascending',  # mayor arriba
+            tickfont=dict(size=12)
+        ),
         autosize=True,
-        margin=dict(l=200, r=20, t=60, b=40),  # margen izquierdo más grande para nombres largos
-        height=500,  # ajustable según cantidad de productos
+        margin=dict(l=200, r=20, t=60, b=40),
+        height=500,
         plot_bgcolor='white',
-        xaxis=dict(tickfont=dict(size=12)),
-        yaxis=dict(tickfont=dict(size=12))
+        xaxis=dict(tickfont=dict(size=12))
     )
+#     File "/opt/render/project/src/streamlit_app/pages/Productos.py", line 128
+#           yaxis=dict(tickfont=dict(size=12))
+#           ^
+# SyntaxError: keyword argument repeated: yaxis
 
     st.markdown(f"### 🏆 Top {top_n} Productos más Vendidos (Órdenes Pagadas)")
     st.plotly_chart(fig, use_container_width=True)
