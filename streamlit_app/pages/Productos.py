@@ -47,7 +47,16 @@ def plot_price_distribution(products):
         labels={"precio": "Precio", "count": "Cantidad de productos"},
         color_discrete_sequence=["#26A81A"]  # azul profesional
     )
-    
+        
+    # Ajustes de layout para Streamlit
+    fig1.update_layout(
+        autosize=True,
+        margin=dict(l=40, r=20, t=30, b=50),
+        height=400,
+        xaxis=dict(tickfont=dict(size=12), title_font=dict(size=14)),
+        yaxis=dict(tickfont=dict(size=12), title_font=dict(size=14)),
+        bargap=0.1
+    )
     st.markdown("### Distribución de Precios de Productos")
     st.plotly_chart(fig1, use_container_width=True)
 
@@ -108,10 +117,15 @@ def plot_top_vendidos(orders_products, products, orders, top_n=10):
 
     # Mostrar valores con separador de miles y colocar la barra más vendida arriba
     fig.update_traces(texttemplate='%{text:,}', textposition='outside', hovertemplate="<b>%{y}</b><br>Órdenes: %{x:,}<extra></extra>")
+    # Layout responsivo y legible
     fig.update_layout(
-        yaxis={'categoryorder':'total ascending'},  # coloca la mayor arriba
-        margin=dict(l=260, r=20, t=60, b=40),
-        plot_bgcolor='white'
+        yaxis={'categoryorder':'total ascending'},  # mayor arriba
+        autosize=True,
+        margin=dict(l=200, r=20, t=60, b=40),  # margen izquierdo más grande para nombres largos
+        height=500,  # ajustable según cantidad de productos
+        plot_bgcolor='white',
+        xaxis=dict(tickfont=dict(size=12)),
+        yaxis=dict(tickfont=dict(size=12))
     )
 
     st.markdown(f"### 🏆 Top {top_n} Productos más Vendidos (Órdenes Pagadas)")
@@ -171,9 +185,14 @@ def plot_top_marcas(orders, orders_products, products, top_n=12):
 
     fig.update_traces(texttemplate='%{text:,}', textposition='outside')
     fig.update_layout(
-        margin=dict(l=20, r=20, t=60, b=80),
-        plot_bgcolor='white'
-    )
+    autosize=True,
+    margin=dict(l=40, r=20, t=60, b=80),
+    height=450,  # ajustable según cantidad de marcas
+    plot_bgcolor='white',
+    xaxis=dict(tickfont=dict(size=12), title_font=dict(size=14)),
+    yaxis=dict(tickfont=dict(size=12), title_font=dict(size=14)),
+    showlegend=False
+    )   
 
     st.subheader(f"🏆 Top {top_n} Marcas más Compradas")
     st.plotly_chart(fig, use_container_width=True)
@@ -260,19 +279,27 @@ fig_top_alerta = px.bar(
     text_auto=True
 )
 # Ajustes de fuentes (solo una vez por cada eje)
+# fig_top_alerta.update_layout(
+#     title_font_size=24,              # título
+#     xaxis_title_font_size=16,        # eje X título
+#     xaxis_tickfont_size=14,          # eje X valores
+#     yaxis_title_font_size=16,        # eje Y título
+#     yaxis_tickfont_size=14           # eje Y valores
+# )
+
+# Layout responsivo y legible
 fig_top_alerta.update_layout(
-    title_font_size=24,              # título
-    xaxis_title_font_size=16,        # eje X título
-    xaxis_tickfont_size=14,          # eje X valores
-    yaxis_title_font_size=16,        # eje Y título
-    yaxis_tickfont_size=14           # eje Y valores
+    autosize=True,
+    margin=dict(l=200, r=20, t=40, b=40),  # margen izquierdo grande para nombres largos
+    height=500,
+    xaxis=dict(tickfont=dict(size=12), title_font=dict(size=14)),
+    yaxis=dict(tickfont=dict(size=12), title_font=dict(size=14))
 )
 
 # Aumentar tamaño del texto en las barras
 fig_top_alerta.update_traces(textfont_size=20)
 
 st.plotly_chart(fig_top_alerta, use_container_width=True)
-
 
 
 # ---- Distribución por marca ----

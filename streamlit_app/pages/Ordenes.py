@@ -98,11 +98,15 @@ def grafica_tiempo(orders):
     # Personalización
     st.markdown("### Órdenes e Ingresos en el Tiempo")
     fig1.update_layout(
-        # title="📊 Órdenes e Ingresos en el Tiempo",
         xaxis_title="Mes",
         yaxis_title="Órdenes",
-        legend=dict(orientation="h", y=-0.2),
-        hovermode="x unified"
+        legend=dict(orientation="h", y=-0.2),  # leyenda horizontal debajo del gráfico
+        hovermode="x unified",
+        autosize=True,
+        margin=dict(l=40, r=20, t=30, b=60),
+        height=450,  # ajustable según cantidad de meses
+        xaxis=dict(tickfont=dict(size=12)),
+        yaxis=dict(tickfont=dict(size=12))
     )
     fig1.update_yaxes(title_text="Órdenes", secondary_y=False)
     fig1.update_yaxes(title_text="Ingresos (CLP)", secondary_y=True)
@@ -118,6 +122,15 @@ def grafica_tiempo(orders):
         barmode="group",
         # title="📈 Crecimiento % Mes a Mes",
         labels={"value": "% Crecimiento", "fecha_creacion": "Mes", "variable": "Métrica"}
+    )
+    fig2.update_layout(
+    autosize=True,
+    margin=dict(l=40, r=20, t=30, b=60),
+    height=450,
+    legend=dict(orientation="h", y=-0.2),
+    xaxis=dict(tickfont=dict(size=12)),
+    yaxis=dict(tickfont=dict(size=12)),
+    hovermode="x unified"
     )
     st.plotly_chart(fig2, use_container_width=True)
 
@@ -156,6 +169,13 @@ def plot_estado_orden(orders):
         textinfo="label+percent",
         hovertemplate="<b>%{label}</b><br>Órdenes: %{value}<br>Porcentaje: %{percent}"
     )
+    # Ajustes de layout para Streamlit
+    fig.update_layout(
+        autosize=True,
+        margin=dict(l=20, r=20, t=30, b=20),
+        height=400,  # ajustable según cantidad de categorías
+        legend=dict(font=dict(size=12))
+    )
 
     st.plotly_chart(fig, use_container_width=True)
 
@@ -182,16 +202,18 @@ def plot_cumplimiento(orders):
         }
     )
 
-    # fig.update_traces(
-    #     textposition="outside",
-    #     hovertemplate="<b>%{x}</b><br>Órdenes: %{y:,}"
-    # )
     fig.update_layout(
         xaxis_title="Estado de Cumplimiento",
         yaxis_title="Número de Órdenes",
         uniformtext_minsize=10,
-        uniformtext_mode="hide"
-    )   
+        uniformtext_mode="hide",
+        autosize=True,
+        margin=dict(l=40, r=20, t=30, b=40),
+        height=400,  # ajustable según cantidad de categorías
+        xaxis=dict(tickfont=dict(size=12)),
+        yaxis=dict(tickfont=dict(size=12)),
+        showlegend=True
+    )
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -231,6 +253,11 @@ def distri_empresa(orders):
         yaxis_title="Número de Órdenes",
         uniformtext_minsize=10,
         uniformtext_mode="hide",
+        autosize=True,
+        margin=dict(l=40, r=20, t=30, b=60),
+        height=400,  # ajustable según cantidad de empresas
+        xaxis=dict(tickfont=dict(size=12)),
+        yaxis=dict(tickfont=dict(size=12)),
         showlegend=False
     )
     st.plotly_chart(fig, use_container_width=True)
@@ -258,10 +285,16 @@ def top_regiones(orders):
         color_discrete_sequence=px.colors.qualitative.Set2
     )
     fig.update_layout(
+        title="Top 10 Regiones con más Órdenes Pagadas",
         xaxis_title="Región de Envío",
-        yaxis_title="Número de Órdenes"
+        yaxis_title="Número de Órdenes",
+        autosize=True,
+        margin=dict(l=40, r=20, t=50, b=60),
+        height=450,
+        xaxis=dict(tickfont=dict(size=12)),
+        yaxis=dict(tickfont=dict(size=12)),
+        showlegend=False
     )
-
     # Mostrar en Streamlit
     st.markdown("### Clientes - Top Regiones con más Órdenes")
     st.plotly_chart(fig, use_container_width=True)

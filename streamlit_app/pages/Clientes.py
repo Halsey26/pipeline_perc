@@ -112,8 +112,7 @@ def marketing_distribucion(customers):
         clientes_marketing,
         names='acepta_marketing',
         values='conteo',
-        hole=0.3,  # opcional, hace un donut
-        color_discrete_sequence=px.colors.sequential.Inferno  # paleta bonita y consistente
+        hole=0.3  # opcional, hace un donut
     )
 
     # Ajustes para Streamlit
