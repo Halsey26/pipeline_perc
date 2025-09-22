@@ -182,7 +182,7 @@ load_css()
 kreadores_header()
 
 # ---- Configuración de página ----
-st.set_page_config(page_title="Clientes", layout="wide")
+# st.set_page_config(page_title="Clientes", layout="wide")
 st.markdown('<h2 class="section-title">Clientes</h2><br>', unsafe_allow_html=True)
 
 # ---- Recuperar los DataFrames ----

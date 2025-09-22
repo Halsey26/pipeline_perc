@@ -270,8 +270,7 @@ load_css()
 kreadores_header()
 
 # ---- Configuración de página ----
-st.set_page_config(page_title="Clientes", layout="wide")
-# st.title("👥 Análisis de Clientes")
+
 st.markdown('<h2 class="section-title"> Órdenes</h2><br>', unsafe_allow_html=True)
 
 # Recuperas los dfs cargados en Home

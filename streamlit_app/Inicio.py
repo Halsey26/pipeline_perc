@@ -143,6 +143,12 @@ def ventas_mensuales(orders):
         markers=True,
         labels={"fecha_creacion": "Fecha", "precio_total": "Ingresos (CLP)"}
     )
+    fig_time.update_layout(
+        autosize=True,
+        margin=dict(l=20, r=20, t=30, b=20),
+        height=400,  # puedes ajustar la altura
+    )
+
     st.plotly_chart(fig_time, use_container_width=True)
 
 
@@ -329,8 +335,12 @@ def top_productos_populares(orders_products, products):
     fig_top.update_layout(
     yaxis=dict(
         categoryorder='total ascending',
-        tickfont=dict(size=14) ), 
-        margin=dict(l=250)  )
+        tickfont=dict(size=12) ), 
+        autosize=True,
+    margin=dict(l=200, r=20, t=20, b=20),  # margen flexible
+    height=500  # ajusta según la cantidad de productos
+)
+
 
     st.plotly_chart(fig_top, use_container_width=True)
 
@@ -376,14 +386,22 @@ def top_productos_vendidos(orders, orders_products, products):
         color_continuous_scale='inferno'   
     )
 
-
     fig_top.update_layout(
     yaxis=dict(
         categoryorder='total ascending',
-        tickfont=dict(size=14)
-    ),
-    margin=dict(l=250)  #  aumenta el margen izquierdo para que entren textos largos
+        tickfont=dict(size=12) ), 
+        autosize=True,
+    margin=dict(l=200, r=20, t=20, b=20),  # margen flexible
+    height=500  # ajusta según la cantidad de productos
 )
+
+#     fig_top.update_layout(
+#     yaxis=dict(
+#         categoryorder='total ascending',
+#         tickfont=dict(size=14)
+#     ),
+#     margin=dict(l=250)  #  aumenta el margen izquierdo para que entren textos largos
+# )
 
     st.plotly_chart(fig_top, use_container_width=True)
 
@@ -498,7 +516,6 @@ col1, col2 = st.columns(2)
 # 1. Ventas en el tiempo        
 with col1:
     st.markdown("###  Ventas Mensuales")
-    # st.markdown("*Insights accionables específicos para tu tienda de equipos fotográficos y de video*")
     ventas_mensuales(orders)
 
 with col2:
