@@ -4,7 +4,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from pipeline_perc.etl.extract import extract_supabase
+# from pipeline_perc.etl.extract import extract_supabase (local)
+from etl.extract import extract_supabase #(deploy)
 from supabase import create_client, Client
 from dotenv import load_dotenv
 import pandas as pd
