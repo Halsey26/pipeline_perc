@@ -16,8 +16,8 @@ from tqdm import tqdm
 from datetime import datetime
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
-from estilos import load_css
-
+from estilos import load_css, colores
+import base64
 
 # Ejecutar: python -m pipeline_perc.streamlit_app.dashboard
 # Para streamlit: streamlit run pipeline_perc/streamlit_app/Inicio.py
@@ -49,25 +49,92 @@ else:
 
 # --- Configuración de la página ---
 st.set_page_config(
-    page_title="📊 Kreadores PRO Analytics Dashboard",
+    page_title="Business Analytics - Kreadores PRO",
     layout="wide",
     initial_sidebar_state="expanded",
     page_icon="📷"
 )
 
-load_css()
+load_css(colores)
 
 
 # --- Header de Kreadores ---
+
+# --- Funciones para manejar imágenes ---
+def get_base64_of_bin_file(bin_file):
+    """
+    Lee un archivo binario y lo codifica en base64
+    """
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+def get_img_with_href(local_img_path, target_url):
+    """
+    Crea un tag HTML para una imagen con enlace
+    """
+    try:
+        img_format = os.path.splitext(local_img_path)[-1].replace('.', '')
+        bin_str = get_base64_of_bin_file(local_img_path)
+        if bin_str is None:
+            return f'<div style="text-align: center; color: {colores["dorado_prim"]}; font-size: 2rem;">📷</div>'
+        html_code = f'''
+            <a href="{target_url}" target="_blank">
+                <img src="data:image/{img_format};base64,{bin_str}" style="max-height: 80px;"/>
+            </a>'''
+        return html_code
+    except Exception as e:
+        print(f"Error al crear HTML para imagen: {e}")
+    return f'<div style="text-align: center; color: {colores["dorado_prim"]}; font-size: 2rem;">📷</div>'
+
 def kreadores_header():
-    st.markdown("""
-    <div class="main-header">
-        <div class="camera-icon">📷</div>
-        <div class="kreadores-logo">KREADORES PRO</div>
-        <div class="tagline"> Analytics Dashboard – Clientes, Órdenes y Productos Reales del E-commerce</div>
-        <div class="subtagline">Análisis de registros, comportamiento de compra y desempeño de productos en Kreadores</div>
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # carpeta del script
+    logo_paths = [
+        os.path.join(BASE_DIR, 'streamlit_app',"images", "logo_kreadores.png"),
+        # os.path.join(BASE_DIR, "assets", "logo_kreadores.png"),
+        # os.path.join(BASE_DIR, "logo_kreadores.png")
+    ]
+    
+    col1, col2, col3 = st.columns([1, 3, 1])
+    with col2:
+        logo_shown = False
+        for logo_path in logo_paths:
+            if os.path.exists(logo_path):
+                st.image(logo_path, use_column_width=True)  # <- cambiar aquí
+                logo_shown = True
+                break
+        if not logo_shown:
+            st.markdown(
+                "<h1 style='text-align: center; color: #667eea; font-size: 2.5rem;'>📷 KREADORES</h1>",
+                unsafe_allow_html=True
+            )
+#{colores['negro']} 0%, {colores['dorado_medio']} 100%
+    st.markdown(f"""
+    <div style="
+        text-align: center; 
+        background: linear-gradient(135deg, {colores['negro']} 0%, {colores['dorado_medio']} 100%);
+        padding: 25px; 
+        border-radius: 15px; 
+        color: white; 
+        margin: 25px 0;">
+        <p style="font-size: 2rem; margin: 0; font-weight: 500;">
+            Panel de Desempeño Empresarial – Clientes, Órdenes y Productos
+        </p>
+        <p style="font-size: 1.2rem; margin: 0; font-weight: 300;">
+            Business Analytics - La Tienda #1 para Crear Contenido Creativo y Profesional
+        </p>
     </div>
     """, unsafe_allow_html=True)
+
+# def kreadores_header():
+#     st.markdown("""
+#     <div class="main-header">
+#         <div class="camera-icon">📷</div>
+#         <div class="kreadores-logo">KREADORES PRO</div>
+#         <div class="tagline"> Analytics Dashboard – Clientes, Órdenes y Productos Reales del E-commerce</div>
+#         <div class="subtagline">Análisis de registros, comportamiento de compra y desempeño de productos en Kreadores</div>
+#     </div>
+#     """, unsafe_allow_html=True)
 
 # --- Función para mostrar métricas ---
 def display_metrics(metrics):
@@ -491,111 +558,144 @@ def recomendaciones_dashboard(orders, customers, products, orders_products):
 
     return tendencia,producto_top,municipio_top,ticket_promedio,reco_ticket,tasa_recompra,reco_recompra,ingresos_totales,nro_ordenes
 
+def pie_pagina(link):
+    # menu lateral
+    st.sidebar.markdown(f"""
+**Explora la voz del cliente y su fidelización** <br>
+   Visita: <a href={"link"} target="_blank" style="color: {colores['azul_claro']}; text-decoration: none; font-weight: bold;">
+        Customer Experience Analytics
+    </a>
+""", unsafe_allow_html=True)
 
-# --------------------------------INICIO APP--------------------------------------------------- 
-kreadores_header()
+    st.sidebar.markdown("---")
+    st.sidebar.markdown(f"""
+    **Kreadores Analytics - v2.2**  
+    Actualizado: {pd.Timestamp.now().strftime("%Y-%m-%d")}   
+    <span style="color: {colores['azul_claro']};">Powered by Streamlit + Supabase</span> <br>
+    © 2025
+    """, unsafe_allow_html=True)
 
-# ---- DATA ----
-df_clean = st.session_state.df_clean
-
-customers = df_clean['customers_clean']
-orders = df_clean['orders_clean']
-products = df_clean['products_clean']
-orders_products = df_clean['orders_products_clean']
-
-# ---- KPIs ----
-metrics = get_kpis(customers, orders)
-display_metrics(metrics)
-
-# ---- VISUALIZACIONES ----
-# st.markdown("*Insights accionables específicos para tu tienda de equipos fotográficos y de video*")
-
-st.markdown('<h2 class="section-title">📊 Análisis General</h2>', unsafe_allow_html=True)
-col1, col2 = st.columns(2)
-
-# 1. Ventas en el tiempo        
-with col1:
-    st.markdown("###  Ventas Mensuales")
-    ventas_mensuales(orders)
-
-with col2:
-    st.markdown("### Resumen de Ventas 2025")
-    resumen_df = resumen_ventas(orders)
-    st.table(resumen_df)
-
-    st.markdown(f"""
-    <div class="priority-low">
-    <strong>Nota:</strong><br>
-    Esta información ha sido filtrada solo para las órdenes pagadas. (Ventas sí realizadas)
+    st.sidebar.markdown("""
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="https://www.kreadores.pro" target="_blank" style="color: #667eea; text-decoration: none;font-weight: bold;">
+        🌐 www.kreadores.pro
+        </a>
     </div>
     """, unsafe_allow_html=True)
 
+# --------------------------------INICIO APP--------------------------------------------------- 
 
-# 2. Por geografia 
-col1, col2 = st.columns(2)
-with col1:
-    nube_municipalidades_order(orders)
-with col2:
-    nube_municipalidades_clientes(customers)
+# kreadores_header()
 
-# 3. Por Productos
-st.markdown("### Top 10 Productos Más Populares")
-top_productos_populares(orders_products, products)
+# pie_pagina("https://ecommerce-ia-backend-nyg4.onrender.com/")
 
-st.markdown("### Top 10 Productos Más Vendidos")
-top_productos_vendidos(orders, orders_products, products)
 
-# --------- RECOMENDACIONES --------------
-st.markdown('<h2 class="section-title">📝 Recomendaciones y Observaciones</h2>', unsafe_allow_html=True)
-# st.markdown(recomendaciones_dashboard(orders, customers, products, orders_products))
-tendencia,producto_top,municipio_top,ticket_promedio,reco_ticket,tasa_recompra,reco_recompra,ingresos_totales,nro_ordenes = recomendaciones_dashboard(orders, customers, products, orders_products)
-st.markdown(f"""
-<div class="priority-high">
+# #-----------------------
+# logo_path_sidebar = "images/logo_kreadores.png"
+# if os.path.exists(logo_path_sidebar):
+#     logo_html_sidebar = get_img_with_href(logo_path_sidebar, "https://www.kreadores.pro")
+# else:
+#     # Crear un logo pequeño alternativo si no existe
+#     logo_html_sidebar = f'''
+# <div style="text-align: center; padding: 15px; background: linear-gradient(135deg, {colores['purpura']} 0%, #B45309 100%); border-radius: 10px; margin-bottom: 20px;">
+#     <div style="font-size: 2.2rem; color: white;">📸&nbsp;&nbsp;🇨🇱</div>
+#     <div style="font-size: 1.3rem; font-weight: bold; color: white;">KREADORES .PRO</div>
+#     <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">Analytics Pro</div>
+# </div>
+# '''
 
-- <strong>Tendencia de ventas:</strong> Actualmente {tendencia}. <br>
+# # st.sidebar.markdown(logo_html_sidebar, unsafe_allow_html=True)
+# # st.sidebar.markdown("---")
 
-- <strong>Producto destacado :</strong> El más vendido es {producto_top}. <br>
-- <strong>Concentración geográfica :</strong> La mayoría de las ventas provienen de {municipio_top}. <br>
-- <strong>Ticket promedio :</strong> {ticket_promedio:,.0f} CLP por orden → {reco_ticket} <br>
-- <strong>Propensión de recompra :</strong> {tasa_recompra:.2f}% de clientes repiten compra → {reco_recompra} <br>
-- <strong>Ingresos acumulados:</strong> {ingresos_totales:,.0f} CLP en {nro_ordenes} ventas.
 
-</div>
-  """, unsafe_allow_html=True)
+# # ---- DATA ----
+# df_clean = st.session_state.df_clean
 
-# ---------- DESCRIPCIONES
-# explicar la definicion de tickect promedio, tasa de recompra  el aov
-st.markdown('<h2 class="section-title">📖 Definiciones de métricass</h2>', unsafe_allow_html=True)
-st.markdown(f"""
-<div class="priority-low">
+# customers = df_clean['customers_clean']
+# orders = df_clean['orders_clean']
+# products = df_clean['products_clean']
+# orders_products = df_clean['orders_products_clean']
 
-- <strong>Ticket Promedio:</strong> Valor promedio de compra por cliente en cada orden.  <br>
-Se calcula como los ingresos totales divididos entre el número de órdenes pagadas.  <br>
-Indica cuánto gasta, en promedio, un cliente por pedido.  
+# # ---- KPIs ----
+# metrics = get_kpis(customers, orders)
+# display_metrics(metrics)
 
-- <strong>Tasa de Recompra:</strong> Porcentaje de clientes que realizaron más de una compra en el periodo analizado.  <br>
-Refleja la fidelidad de los clientes y la efectividad de las estrategias de retención.  
+# # ---- VISUALIZACIONES ----
+# # st.markdown("*Insights accionables específicos para tu tienda de equipos fotográficos y de video*")
 
-- <strong>AOV (Average Order Value):</strong> Métrica muy relacionada con el ticket promedio.  <br>
-Representa el ingreso promedio generado por cada orden efectivamente pagada.  <br>
-Una subida en el AOV suele asociarse con estrategias de <i>upselling</i> y <i>cross-selling</i>.  
+# st.markdown('<h2 class="section-title">📊 Análisis General</h2>', unsafe_allow_html=True)
+# col1, col2 = st.columns(2)
 
-</div>
-""", unsafe_allow_html=True)
+# # 1. Ventas en el tiempo        
+# with col1:
+#     st.markdown("###  Ventas Mensuales")
+#     ventas_mensuales(orders)
 
-# --- Pie de página ---
-st.sidebar.markdown("---")
-st.sidebar.info("""
-**Kreadores Analytics Dashboard**  
-v2.1 · Actualizado: {date}  
-Inspírate, crea y lleva tus ideas al siguiente nivel.
-Powered by Supabase
-""".format(date=pd.Timestamp.now().strftime("%Y-%m-%d")))
+# with col2:
+#     st.markdown("### Resumen de Ventas 2025")
+#     resumen_df = resumen_ventas(orders)
+#     st.table(resumen_df)
 
-st.sidebar.markdown("""
-<div style="text-align: center; margin-top: 20px;">
-    <a href="https://www.kreadores.pro" target="_blank" style="color: #667eea; text-decoration: none;">
-        🌐 www.kreadores.pro
-    </a>
-</div>
-""", unsafe_allow_html=True)
+#     st.markdown(f"""
+#     <div class="priority-low">
+#     <strong>Nota:</strong><br>
+#     Esta información ha sido filtrada solo para las órdenes pagadas. (Ventas sí realizadas)
+#     </div>
+#     """, unsafe_allow_html=True)
+
+
+# # 2. Por geografia 
+# col1, col2 = st.columns(2)
+# with col1:
+#     nube_municipalidades_order(orders)
+# with col2:
+#     nube_municipalidades_clientes(customers)
+
+# # 3. Por Productos
+# st.markdown("### Top 10 Productos Más Populares")
+# top_productos_populares(orders_products, products)
+
+# st.markdown("### Top 10 Productos Más Vendidos")
+# top_productos_vendidos(orders, orders_products, products)
+
+# # --------- RECOMENDACIONES --------------
+# st.markdown('<h2 class="section-title">📝 Recomendaciones y Observaciones</h2>', unsafe_allow_html=True)
+# # st.markdown(recomendaciones_dashboard(orders, customers, products, orders_products))
+# tendencia,producto_top,municipio_top,ticket_promedio,reco_ticket,tasa_recompra,reco_recompra,ingresos_totales,nro_ordenes = recomendaciones_dashboard(orders, customers, products, orders_products)
+# st.markdown(f"""
+# <div class="priority-high">
+
+# - <strong>Tendencia de ventas:</strong> Actualmente {tendencia}. <br>
+
+# - <strong>Producto destacado :</strong> El más vendido es {producto_top}. <br>
+# - <strong>Concentración geográfica :</strong> La mayoría de las ventas provienen de {municipio_top}. <br>
+# - <strong>Ticket promedio :</strong> {ticket_promedio:,.0f} CLP por orden → {reco_ticket} <br>
+# - <strong>Propensión de recompra :</strong> {tasa_recompra:.2f}% de clientes repiten compra → {reco_recompra} <br>
+# - <strong>Ingresos acumulados:</strong> {ingresos_totales:,.0f} CLP en {nro_ordenes} ventas.
+
+# </div>
+#   """, unsafe_allow_html=True)
+
+# # ---------- DESCRIPCIONES
+# # explicar la definicion de tickect promedio, tasa de recompra  el aov
+# st.markdown('<h2 class="section-title">📖 Definiciones de métricass</h2>', unsafe_allow_html=True)
+# st.markdown(f"""
+# <div class="priority-low">
+
+# - <strong>Ticket Promedio:</strong> Valor promedio de compra por cliente en cada orden.  <br>
+# Se calcula como los ingresos totales divididos entre el número de órdenes pagadas.  <br>
+# Indica cuánto gasta, en promedio, un cliente por pedido.  
+
+# - <strong>Tasa de Recompra:</strong> Porcentaje de clientes que realizaron más de una compra en el periodo analizado.  <br>
+# Refleja la fidelidad de los clientes y la efectividad de las estrategias de retención.  
+
+# - <strong>AOV (Average Order Value):</strong> Métrica muy relacionada con el ticket promedio.  <br>
+# Representa el ingreso promedio generado por cada orden efectivamente pagada.  <br>
+# Una subida en el AOV suele asociarse con estrategias de <i>upselling</i> y <i>cross-selling</i>.  
+
+# </div>
+# """, unsafe_allow_html=True)
+
+
+
+
