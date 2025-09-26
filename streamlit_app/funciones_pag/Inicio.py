@@ -88,7 +88,6 @@ def get_img_with_href(local_img_path, target_url):
     return f'<div style="text-align: center; color: {colores["dorado_prim"]}; font-size: 2rem;">📷</div>'
 
 def kreadores_header():
-    
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # carpeta del script
     parent_dir = os.path.abspath(os.path.join(BASE_DIR, ".."))
     ruta = [os.path.join(parent_dir,"images", "logo_kreadores.png")]
@@ -98,7 +97,12 @@ def kreadores_header():
         logo_shown = False
         for logo_path in ruta:
             if os.path.exists(logo_path):
-                st.image(logo_path, use_container_width=True)  
+                try:
+                    # Para versiones nuevas
+                    st.image(logo_path, use_container_width=True)
+                except TypeError:
+                    # Para versiones antiguas
+                    st.image(logo_path, use_column_width=True)
                 logo_shown = True
                 break
         if not logo_shown:
