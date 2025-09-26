@@ -1,11 +1,13 @@
-# pipeline_perc
+# Kreadores Data Pipeline & Dashboard
 
 
 ## Descripción
 
-`pipeline_perc` es un repositorio que contiene un pipeline inicial para extraer datos desde Supabase, preparar y analizar métricas de e‑commerce y exponer un dashboard en Streamlit. Incluye módulos de ETL, notebooks de experimentación (ej. modelo churn), flujos de Prefect y una [app en Streamlit](https://business-dashboard-kreadores.onrender.com/).
+`Kreadores Data Pipeline & Dashboard` es un repositorio integral para la gestión y análisis de datos de e-commerce. Combina un pipeline ETL con Prefect y Supabase, módulos reutilizables de transformación de datos, notebooks de experimentación (incluyendo un modelo de churn), y una aplicación interactiva en Streamlit que expone métricas clave, KPIs y visualizaciones dinámicas.
 
----
+👉 [Ver el dashboard en línea](https://business-dashboard-kreadores.onrender.com)
+
+![app_deply.png](app_deploy.png)
 
 ## Contenido principal
 

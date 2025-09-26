@@ -128,7 +128,6 @@ def pag_Clientes(data):
     pie_pagina("https://ecommerce-ia-backend-nyg4.onrender.com/")
 
     # ---- Configuración de página ----
-    # st.set_page_config(page_title="Clientes", layout="wide")
     st.markdown('<h2 class="section-title">Clientes</h2><br>', unsafe_allow_html=True)
 
 
@@ -217,7 +216,6 @@ def pag_productos(data):
     pie_pagina("https://ecommerce-ia-backend-nyg4.onrender.com/")
 
     # ---- Configuración de página ----
-    st.set_page_config(page_title="Products", layout="wide")
     st.markdown('<h2 class="section-title">Products</h2><br>', unsafe_allow_html=True)
 
     # ---- KPIs ----
