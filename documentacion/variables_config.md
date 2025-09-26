@@ -26,7 +26,3 @@ PYTHON_VERSION=3.11.9
 
 
 
-# Fuentes sugeridas
-
-- sdf
-- 

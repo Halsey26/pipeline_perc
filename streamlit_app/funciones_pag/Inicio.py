@@ -609,7 +609,7 @@ def logo_lateral():
 
 # pie_pagina("https://ecommerce-ia-backend-nyg4.onrender.com/")
 
-
+# https://ecommerce-ia-backend-nyg4.onrender.com
 # #-----------------------
 # logo_lateral()
 
