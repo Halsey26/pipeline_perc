@@ -1,6 +1,6 @@
 # Configuración de Supabase
 
-Documento: **supabase-config.md**
+Archivo: **supabase-config.md**
 
 > Esta documentación explica los pasos necesarios para configurar Supabase para el pipeline ETL (esquemas, vistas públicas y variables de entorno). Parte de la `documentacion/` del repo.
 
