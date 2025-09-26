@@ -4,7 +4,7 @@ import plotly.express as px
 
 # Ajustes de fuentes 
 import plotly.io as pio
-from Inicio import kreadores_header , display_metrics
+from funciones_pag.Inicio import kreadores_header , display_metrics
 from estilos import load_css
 
 # --------------------------- FUNCIONES
@@ -57,7 +57,7 @@ def plot_price_distribution(products):
         yaxis=dict(tickfont=dict(size=12), title_font=dict(size=14)),
         bargap=0.1
     )
-    st.markdown("### Distribución de Precios de Productos")
+    # st.markdown("### Distribución de Precios de Productos")
     st.plotly_chart(fig1, use_container_width=True)
 
 
@@ -219,95 +219,95 @@ def get_productos_extremos(products):
 
 
 # -------------------------------- PRODUCTOS ------------- 
-load_css()
-kreadores_header()
+# load_css()
+# kreadores_header()
 
-# ---- Configuración de página ----
-# st.set_page_config(page_title="Products", layout="wide")
-st.markdown('<h2 class="section-title">Products</h2><br>', unsafe_allow_html=True)
+# # ---- Configuración de página ----
+# # st.set_page_config(page_title="Products", layout="wide")
+# st.markdown('<h2 class="section-title">Products</h2><br>', unsafe_allow_html=True)
 
-# Recuperas los dfs cargados en Home
-df_clean = st.session_state.df_clean
-products = df_clean['products_clean']
-orders = df_clean['orders_clean']
-orders_products = df_clean['orders_products_clean']
+# # Recuperas los dfs cargados en Home
+# df_clean = st.session_state.df_clean
+# products = df_clean['products_clean']
+# orders = df_clean['orders_clean']
+# orders_products = df_clean['orders_products_clean']
 
-# ---- KPIs ----
-metrics = get_productos_kpis(products)
-display_metrics(metrics)
+# # ---- KPIs ----
+# metrics = get_productos_kpis(products)
+# display_metrics(metrics)
 
-metrics2 = get_kpis(products, orders_products)
-display_metrics(metrics2)
-
-
-# ---- Distribución de precios ----
-# st.subheader("Distribución de Precios de Productos")
-
-col1, col2 = st.columns(2)
-with col1:
-    plot_price_distribution(products)
-with col2:
-    st.subheader(" ")
-    prod_max, prod_min = get_productos_extremos(products)
-    st.markdown(f"""
-        <div class="priority-low">
-
-- <strong>Producto más caro:</strong> <br>
-        💎 {prod_max['descripcion']} - Precio: ${prod_max['precio']:,}
-- <strong>Producto más económico:</strong> <br>        
-        ⚡ {prod_min['descripcion']} - Precio: ${prod_min['precio']:,}
-        </div>
-        """, unsafe_allow_html=True)
+# metrics2 = get_kpis(products, orders_products)
+# display_metrics(metrics2)
 
 
-# Productos más vendidos
-plot_top_vendidos(orders_products, products, orders)
+# # ---- Distribución de precios ----
+# # st.subheader("Distribución de Precios de Productos")
 
-# ---- Productos bajo umbral de stock ----
-productos_alerta = products[products['stock'] <= products['umbral_stock']].copy()
-productos_alerta['faltante'] = productos_alerta['umbral_stock'] - productos_alerta['stock']
+# col1, col2 = st.columns(2)
+# with col1:
+#     plot_price_distribution(products)
+# with col2:
+#     st.subheader(" ")
+#     prod_max, prod_min = get_productos_extremos(products)
+#     st.markdown(f"""
+#         <div class="priority-low">
 
-# Seleccionamos columnas relevantes
-tabla_alerta = productos_alerta[['descripcion', 'stock', 'umbral_stock', 'faltante']].sort_values('faltante', ascending= False)
+# - <strong>Producto más caro:</strong> <br>
+#         💎 {prod_max['descripcion']} - Precio: ${prod_max['precio']:,}
+# - <strong>Producto más económico:</strong> <br>        
+#         ⚡ {prod_min['descripcion']} - Precio: ${prod_min['precio']:,}
+#         </div>
+#         """, unsafe_allow_html=True)
 
-st.subheader("🚨 Productos en Alerta de Reposición")
-st.dataframe(tabla_alerta, use_container_width=True)
 
-#---- Top 10 productos con mayor faltante ----
-st.subheader("Top 10 Productos más Críticos (faltante)")
-top_alerta = tabla_alerta.sort_values("faltante", ascending=False).head(10)
-fig_top_alerta = px.bar(
-    top_alerta,
-    x="faltante", y="descripcion",  # Cambiamos orden
-    orientation="h",             # Horizontal
-    title=" ",
-    labels={"descripcion": "Producto", "faltante": "Unidades a reponer"},
-    text_auto=True
-)
-# Ajustes de fuentes (solo una vez por cada eje)
+# # Productos más vendidos
+# plot_top_vendidos(orders_products, products, orders)
+
+# # ---- Productos bajo umbral de stock ----
+# productos_alerta = products[products['stock'] <= products['umbral_stock']].copy()
+# productos_alerta['faltante'] = productos_alerta['umbral_stock'] - productos_alerta['stock']
+
+# # Seleccionamos columnas relevantes
+# tabla_alerta = productos_alerta[['descripcion', 'stock', 'umbral_stock', 'faltante']].sort_values('faltante', ascending= False)
+
+# st.subheader("🚨 Productos en Alerta de Reposición")
+# st.dataframe(tabla_alerta, use_container_width=True)
+
+# #---- Top 10 productos con mayor faltante ----
+# st.subheader("Top 10 Productos más Críticos (faltante)")
+# top_alerta = tabla_alerta.sort_values("faltante", ascending=False).head(10)
+# fig_top_alerta = px.bar(
+#     top_alerta,
+#     x="faltante", y="descripcion",  # Cambiamos orden
+#     orientation="h",             # Horizontal
+#     title=" ",
+#     labels={"descripcion": "Producto", "faltante": "Unidades a reponer"},
+#     text_auto=True
+# )
+# # Ajustes de fuentes (solo una vez por cada eje)
+# # fig_top_alerta.update_layout(
+# #     title_font_size=24,              # título
+# #     xaxis_title_font_size=16,        # eje X título
+# #     xaxis_tickfont_size=14,          # eje X valores
+# #     yaxis_title_font_size=16,        # eje Y título
+# #     yaxis_tickfont_size=14           # eje Y valores
+# # )
+
+# # Layout responsivo y legible
 # fig_top_alerta.update_layout(
-#     title_font_size=24,              # título
-#     xaxis_title_font_size=16,        # eje X título
-#     xaxis_tickfont_size=14,          # eje X valores
-#     yaxis_title_font_size=16,        # eje Y título
-#     yaxis_tickfont_size=14           # eje Y valores
+#     autosize=True,
+#     margin=dict(l=200, r=20, t=40, b=40),  # margen izquierdo grande para nombres largos
+#     height=500,
+#     xaxis=dict(tickfont=dict(size=12), title_font=dict(size=14)),
+#     yaxis=dict(tickfont=dict(size=12), title_font=dict(size=14))
 # )
 
-# Layout responsivo y legible
-fig_top_alerta.update_layout(
-    autosize=True,
-    margin=dict(l=200, r=20, t=40, b=40),  # margen izquierdo grande para nombres largos
-    height=500,
-    xaxis=dict(tickfont=dict(size=12), title_font=dict(size=14)),
-    yaxis=dict(tickfont=dict(size=12), title_font=dict(size=14))
-)
+# # Aumentar tamaño del texto en las barras
+# fig_top_alerta.update_traces(textfont_size=20)
 
-# Aumentar tamaño del texto en las barras
-fig_top_alerta.update_traces(textfont_size=20)
-
-st.plotly_chart(fig_top_alerta, use_container_width=True)
+# st.plotly_chart(fig_top_alerta, use_container_width=True)
 
 
-# ---- Distribución por marca ----
-plot_top_marcas(orders, orders_products, products)
+# # ---- Distribución por marca ----
+# plot_top_marcas(orders, orders_products, products)
 

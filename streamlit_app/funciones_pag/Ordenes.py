@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from Inicio import kreadores_header , display_metrics
+from funciones_pag.Inicio import kreadores_header , display_metrics
 from estilos import load_css
 
 
@@ -299,43 +299,43 @@ def top_regiones(orders):
     st.markdown("### Clientes - Top Regiones con más Órdenes")
     st.plotly_chart(fig, use_container_width=True)
 # -------------------------------- ORDENES -----------------------------
-load_css()
-kreadores_header()
+# load_css()
+# kreadores_header()
 
-# ---- Configuración de página ----
+# # ---- Configuración de página ----
 
-st.markdown('<h2 class="section-title"> Órdenes</h2><br>', unsafe_allow_html=True)
+# st.markdown('<h2 class="section-title"> Órdenes</h2><br>', unsafe_allow_html=True)
 
-# Recuperas los dfs cargados en Home
-df_clean = st.session_state.df_clean
+# # Recuperas los dfs cargados en Home
+# df_clean = st.session_state.df_clean
 
-customers = df_clean['customers_clean']
-orders = df_clean['orders_clean']
+# customers = df_clean['customers_clean']
+# orders = df_clean['orders_clean']
 
-# ---- KPIs ----
-metrics = kpis_ordenes( orders)
-display_metrics(metrics)
+# # ---- KPIs ----
+# metrics = kpis_ordenes( orders)
+# display_metrics(metrics)
 
-metrics_por = kpis_porc( orders)
-display_metrics(metrics_por)
+# metrics_por = kpis_porc( orders)
+# display_metrics(metrics_por)
 
 
-# ---- Órdenes en el tiempo ----
-grafica_tiempo(orders)
+# # ---- Órdenes en el tiempo ----
+# grafica_tiempo(orders)
 
-col1, col2 = st.columns(2)
+# col1, col2 = st.columns(2)
 
-with col1:
-    # ---- Estado de órdenes ----
-    plot_estado_orden(orders)    
+# with col1:
+#     # ---- Estado de órdenes ----
+#     plot_estado_orden(orders)    
     
-with col2:
-    # ---- Estado cumplimiento/envío ----
-    plot_cumplimiento(orders)
+# with col2:
+#     # ---- Estado cumplimiento/envío ----
+#     plot_cumplimiento(orders)
 
 
-# ---- Empresa de envío ----
-distri_empresa(orders)
+# # ---- Empresa de envío ----
+# distri_empresa(orders)
 
-# ---- Top 10 regiones ----
-top_regiones(orders)
+# # ---- Top 10 regiones ----
+# top_regiones(orders)

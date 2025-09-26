@@ -88,19 +88,17 @@ def get_img_with_href(local_img_path, target_url):
     return f'<div style="text-align: center; color: {colores["dorado_prim"]}; font-size: 2rem;">📷</div>'
 
 def kreadores_header():
+    
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # carpeta del script
-    logo_paths = [
-        os.path.join(BASE_DIR, 'streamlit_app',"images", "logo_kreadores.png"),
-        # os.path.join(BASE_DIR, "assets", "logo_kreadores.png"),
-        # os.path.join(BASE_DIR, "logo_kreadores.png")
-    ]
+    parent_dir = os.path.abspath(os.path.join(BASE_DIR, ".."))
+    ruta = [os.path.join(parent_dir,"images", "logo_kreadores.png")]
     
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
         logo_shown = False
-        for logo_path in logo_paths:
+        for logo_path in ruta:
             if os.path.exists(logo_path):
-                st.image(logo_path, use_column_width=True)  # <- cambiar aquí
+                st.image(logo_path, use_container_width=True)  
                 logo_shown = True
                 break
         if not logo_shown:
@@ -149,7 +147,7 @@ def display_metrics(metrics):
             """, unsafe_allow_html=True)
 
 # --- Función para calcular y devolver métricas ---
-def get_kpis(customers, orders):
+def get_kpis_inicio(customers, orders):
     # Total clientes
     total_clientes = customers['id_cliente'].nunique()
     
@@ -560,6 +558,7 @@ def recomendaciones_dashboard(orders, customers, products, orders_products):
 
 def pie_pagina(link):
     # menu lateral
+    st.sidebar.markdown("---")
     st.sidebar.markdown(f"""
 **Explora la voz del cliente y su fidelización** <br>
    Visita: <a href={"link"} target="_blank" style="color: {colores['azul_claro']}; text-decoration: none; font-weight: bold;">
@@ -583,6 +582,23 @@ def pie_pagina(link):
     </div>
     """, unsafe_allow_html=True)
 
+def logo_lateral():
+    logo_path_sidebar = "images/logo_kreadores.png"
+    if os.path.exists(logo_path_sidebar):
+        logo_html_sidebar = get_img_with_href(logo_path_sidebar, "https://www.kreadores.pro")
+    else:
+        # Crear un logo pequeño alternativo si no existe
+        logo_html_sidebar = f'''
+    <div style="text-align: center; padding: 15px; background: linear-gradient(135deg, {colores['purpura']} 0%, #B45309 100%); border-radius: 10px; margin-bottom: 20px;">
+        <div style="font-size: 2.2rem; color: white;">📸&nbsp;&nbsp;🇨🇱</div>
+        <div style="font-size: 1.3rem; font-weight: bold; color: white;">KREADORES .PRO</div>
+        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">Analytics Pro</div>
+    </div>
+    '''
+
+    st.sidebar.markdown(logo_html_sidebar, unsafe_allow_html=True)
+    st.sidebar.markdown("---")
+
 # --------------------------------INICIO APP--------------------------------------------------- 
 
 # kreadores_header()
@@ -591,22 +607,7 @@ def pie_pagina(link):
 
 
 # #-----------------------
-# logo_path_sidebar = "images/logo_kreadores.png"
-# if os.path.exists(logo_path_sidebar):
-#     logo_html_sidebar = get_img_with_href(logo_path_sidebar, "https://www.kreadores.pro")
-# else:
-#     # Crear un logo pequeño alternativo si no existe
-#     logo_html_sidebar = f'''
-# <div style="text-align: center; padding: 15px; background: linear-gradient(135deg, {colores['purpura']} 0%, #B45309 100%); border-radius: 10px; margin-bottom: 20px;">
-#     <div style="font-size: 2.2rem; color: white;">📸&nbsp;&nbsp;🇨🇱</div>
-#     <div style="font-size: 1.3rem; font-weight: bold; color: white;">KREADORES .PRO</div>
-#     <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">Analytics Pro</div>
-# </div>
-# '''
-
-# # st.sidebar.markdown(logo_html_sidebar, unsafe_allow_html=True)
-# # st.sidebar.markdown("---")
-
+# logo_lateral()
 
 # # ---- DATA ----
 # df_clean = st.session_state.df_clean

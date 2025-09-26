@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from Inicio import kreadores_header , display_metrics
-from estilos import load_css
+from funciones_pag.Inicio import kreadores_header , display_metrics
+from estilos import load_css, colores
 
 
 # ------------- FUNCIONES
@@ -92,7 +92,8 @@ def geo_clientes(customer, ciudad_muni):
     )
     fig_ciudad = px.bar(
         clientes_ciudad, x=f"{columna}", y="id_cliente",
-        text_auto=True, labels={"id_cliente": "Nro Clientes", columna: label}
+        text_auto=True, labels={"id_cliente": "Nro Clientes", columna: label},
+        color_discrete_sequence=[colores['dorado_medio']] 
     )
     # Ajustes para que se vea bien en Streamlit deploy
     fig_ciudad.update_layout(
@@ -211,49 +212,49 @@ def gasto_frec(orders, customers):
 
     st.plotly_chart(fig_top, use_container_width=True)
 # ------------------------------------------ CLIENTES ----------------
-load_css()
-kreadores_header()
+# load_css()
+# kreadores_header()
 
-# ---- Configuración de página ----
-# st.set_page_config(page_title="Clientes", layout="wide")
-st.markdown('<h2 class="section-title">Clientes</h2><br>', unsafe_allow_html=True)
+# # ---- Configuración de página ----
+# # st.set_page_config(page_title="Clientes", layout="wide")
+# st.markdown('<h2 class="section-title">Clientes</h2><br>', unsafe_allow_html=True)
 
-# ---- Recuperar los DataFrames ----
-df_clean = st.session_state.df_clean
-customers = df_clean['customers_clean']
-orders = df_clean['orders_clean']
-# hacer un try para obtener los df, si hay error, decir primero recargar pagina de Inicio para que se cargen los df
-# AttributeError: st.session_state has no attribute "df_clean". Did you forget to initialize it?
+# # ---- Recuperar los DataFrames ----
+# df_clean = st.session_state.df_clean
+# customers = df_clean['customers_clean']
+# orders = df_clean['orders_clean']
+# # hacer un try para obtener los df, si hay error, decir primero recargar pagina de Inicio para que se cargen los df
+# # AttributeError: st.session_state has no attribute "df_clean". Did you forget to initialize it?
 
-# ---- KPIs ----
-metrics = get_clientes_kpis(customers, orders)
-display_metrics(metrics)
+# # ---- KPIs ----
+# metrics = get_clientes_kpis(customers, orders)
+# display_metrics(metrics)
 
-metrics_por = kpis_por(customers, orders)
-display_metrics(metrics_por)
+# metrics_por = kpis_por(customers, orders)
+# display_metrics(metrics_por)
 
-# ---- Top 5 ciudades ----
-st.markdown('<h3 class="section-title">📊 Distribución Geográfica</h3>', unsafe_allow_html=True)
+# # ---- Top 5 ciudades ----
+# st.markdown('<h3 class="section-title">📊 Distribución Geográfica</h3>', unsafe_allow_html=True)
 
-st.markdown("### Top 5 Ciudades con más Clientes")
-geo_clientes(customers,0)
-st.markdown("###  Top 5 Municipalidades con más Clientes")
-geo_clientes(customers,1)
+# st.markdown("### Top 5 Ciudades con más Clientes")
+# geo_clientes(customers,0)
+# st.markdown("###  Top 5 Municipalidades con más Clientes")
+# geo_clientes(customers,1)
 
 
-# st.markdown("### 📊 Segmentación de Clientes")
-st.markdown('<h3 class="section-title">📊 Segmentación de Cliente</h3>', unsafe_allow_html=True)
-# ---- Marketing ----
-col1, col2 = st.columns(2)
+# # st.markdown("### 📊 Segmentación de Clientes")
+# st.markdown('<h3 class="section-title">📊 Segmentación de Cliente</h3>', unsafe_allow_html=True)
+# # ---- Marketing ----
+# col1, col2 = st.columns(2)
 
-with col1:
-    st.markdown("### Clientes que Aceptan Marketing")
-    marketing_distribucion(customers)
-with col2:
-    st.markdown("### Conversión de Clientes según Marketing")
-    marketing_conversion(customers, orders)
+# with col1:
+#     st.markdown("### Clientes que Aceptan Marketing")
+#     marketing_distribucion(customers)
+# with col2:
+#     st.markdown("### Conversión de Clientes según Marketing")
+#     marketing_conversion(customers, orders)
 
-# st.markdown("### 🏆 Top Clientes")
-st.markdown('<h3 class="section-title">🏆 Top Clientes</h3>', unsafe_allow_html=True)
-gasto_frec(orders, customers)
+# # st.markdown("### 🏆 Top Clientes")
+# st.markdown('<h3 class="section-title">🏆 Top Clientes</h3>', unsafe_allow_html=True)
+# gasto_frec(orders, customers)
 
