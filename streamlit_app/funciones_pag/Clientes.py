@@ -93,7 +93,7 @@ def geo_clientes(customer, ciudad_muni):
     fig_ciudad = px.bar(
         clientes_ciudad, x=f"{columna}", y="id_cliente",
         text_auto=True, labels={"id_cliente": "Nro Clientes", columna: label},
-        color_discrete_sequence=[colores['dorado_medio']] 
+        color_discrete_sequence=[colores['purpura']] 
     )
     # Ajustes para que se vea bien en Streamlit deploy
     fig_ciudad.update_layout(
@@ -113,7 +113,14 @@ def marketing_distribucion(customers):
         clientes_marketing,
         names='acepta_marketing',
         values='conteo',
-        hole=0.3  # opcional, hace un donut
+        hole=0.3,  # opcional, hace un donut
+         color='acepta_marketing',
+        color_discrete_map={
+            'Sí': colores['verde_lima'],
+            'No': colores['rojo'],
+            1: colores['verde_lima'],
+            0: colores['rojo']
+        }
     )
 
     # Ajustes para Streamlit
@@ -153,6 +160,10 @@ def marketing_conversion(customers, orders):
             "acepta_marketing": "Acepta Marketing",
             "conteo": "Número de Clientes",
             "comprador": "¿Compró?"
+        },
+        color_discrete_map={
+            True:colores['verde_lima'],   # verde para los que compraron
+            False:colores['rojo']   # rojo para los que no compraron
         }
     )
     # Ajustes para Streamlit
@@ -197,7 +208,8 @@ def gasto_frec(orders, customers):
             "cliente_nombre": "Cliente",
             "precio_total": "Gasto Total",
             "numero_compras": "Número de Compras"
-        }
+        },
+        color_discrete_sequence=[colores['verde']]  
     )
     fig_top.update_layout(
         autosize=True,

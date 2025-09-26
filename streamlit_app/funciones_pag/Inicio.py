@@ -114,7 +114,7 @@ def kreadores_header():
     st.markdown(f"""
     <div style="
         text-align: center; 
-        background: linear-gradient(135deg, {colores['negro']} 0%, {colores['dorado_medio']} 100%);
+        background: linear-gradient(135deg, {colores['negro']} 0%, {colores['dorado_claro']} 100%);
         padding: 25px; 
         border-radius: 15px; 
         color: white; 
@@ -210,7 +210,8 @@ def ventas_mensuales(orders):
     fig_time = px.line(
         ventas_tiempo, x='fecha_creacion', y='precio_total',
         markers=True,
-        labels={"fecha_creacion": "Fecha", "precio_total": "Ingresos (CLP)"}
+        labels={"fecha_creacion": "Fecha", "precio_total": "Ingresos (CLP)"},
+        color_discrete_sequence=[colores['verde']]  
     )
     fig_time.update_layout(
         autosize=True,
@@ -398,7 +399,10 @@ def top_productos_populares(orders_products, products):
         orientation='h',
         labels={"descripcion": "Producto", "id_orden": "Órdenes"},
         color='id_orden',                 # columna numérica para asignar color
-        color_continuous_scale='inferno'   # aquí sí entra la paleta
+        color_continuous_scale=[
+            (0, colores['negro']),    
+            (1,colores['amarillo'])    
+        ]  
     )
     # fig_top.update_layout(yaxis={'categoryorder':'total ascending'})
     fig_top.update_layout(
@@ -452,7 +456,10 @@ def top_productos_vendidos(orders, orders_products, products):
         orientation='h',
         labels={"descripcion": "Producto", "num_ordenes": "Ventas"},
         color='num_ordenes',                 
-        color_continuous_scale='inferno'   
+        color_continuous_scale=[
+            (0, colores['negro']),    
+            (1,colores['amarillo'])    
+        ]  
     )
 
     fig_top.update_layout(
@@ -565,7 +572,7 @@ def pie_pagina(link):
     st.sidebar.markdown("---")
     st.sidebar.markdown(f"""
 **Explora la voz del cliente y su fidelización** <br>
-   Visita: <a href={"link"} target="_blank" style="color: {colores['azul_claro']}; text-decoration: none; font-weight: bold;">
+   Visita: <a href="{link}" target="_blank" style="color: {colores['azul_claro']}; text-decoration: none; font-weight: bold;">
         Customer Experience Analytics
     </a>
 """, unsafe_allow_html=True)

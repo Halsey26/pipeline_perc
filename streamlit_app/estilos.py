@@ -22,7 +22,7 @@ colores = {
     "azul": "#1E3A8A",        # Azul confianza
     "azul_claro": "#3B82F6",  # Azul vibrante
     "azul_medio": "#667eea",  # Azul principal
-    "purpura": "#764BA2",     # Púrpura secundario
+    "purpura": "#B598D2",     # Púrpura secundario
     "rosa": "#F093FB",        # Rosa acento
     "rosa_magenta": "#EC4899", #ACCENT_COLOR
     "verde": "#48BB78",       # Verde éxito

@@ -4,7 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from funciones_pag.Inicio import kreadores_header , display_metrics
-from estilos import load_css
+from estilos import load_css, colores
 
 
 # ------------ FUNCIONES
@@ -91,7 +91,7 @@ def grafica_tiempo(orders):
 
     fig1.add_trace(
         go.Scatter(x=ordenes_time['fecha_creacion'], y=ordenes_time['precio_total'],
-                name="Ingresos", mode="lines+markers", line=dict(color="#ff7f0e")),
+                name="Ingresos", mode="lines+markers", line=dict(color=colores['verde'])),
         secondary_y=True
     )
 
@@ -121,7 +121,11 @@ def grafica_tiempo(orders):
         y=["ordenes_pct_change", "ingresos_pct_change"],
         barmode="group",
         # title="📈 Crecimiento % Mes a Mes",
-        labels={"value": "% Crecimiento", "fecha_creacion": "Mes", "variable": "Métrica"}
+        labels={"value": "% Crecimiento", "fecha_creacion": "Mes", "variable": "Métrica"},
+                color_discrete_map={
+            "ordenes_pct_change": "#1f77b4",  # azul para órdenes
+            "ingresos_pct_change":colores['verde']  # verde para ingresos
+        }
     )
     fig2.update_layout(
     autosize=True,
