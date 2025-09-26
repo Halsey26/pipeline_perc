@@ -146,3 +146,8 @@ Si quieres colaborar:
 1. Haz fork del repo
 2. Crea una rama `feature/...`
 3. Abre Pull Request con descripción clara
+
+## Créditos
+Proyecto realizado para Perceivo AI Agency — Cliente: Kreadores Pro.
+
+Equipo de desarrollo: [Angelica Cassano](https://www.linkedin.com/in/angelica-cassano/), [Evelyn Perez](https://www.linkedin.com/in/evelyn-delvalle-p%C3%A9rez/).
